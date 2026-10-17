@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نبرة 🎙️ - منصة دبلجة وأداء أصوات الأنمي</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Cairo & Tajawal) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    },
+                    colors: {
+                        studio: {
+                            950: '#07090e',
+                            900: '#0f131d',
+                            800: '#181f2f',
+                            700: '#232d42',
+                            accent: '#6366f1',
+                            neon: '#a855f7',
+                            mic: '#ef4444'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #07090e;
+            color: #f3f4f6;
+        }
+
+        /* تخصيص شريط التمرير */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f131d;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #232d42;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6366f1;
+        }
+
+        /* نبض التسجيل الصوتي */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .recording-pulse {
+            animation: pulse-ring 1.8s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-purple-600 selection:text-white">
+
+    <!-- 1. شريط التنقل العلوي (Navbar) -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-studio-950/80 border-b border-studio-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- الشعار -->
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-600/30">
+                    <i class="fa-solid fa-microphone-lines text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black tracking-tight text-white flex items-center gap-2">
+                        نَبْـرَة <span class="text-xs bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 px-2 py-0.5 rounded-full">استوديو</span>
+                    </h1>
+                    <p class="text-xs text-gray-400">منصة كاستينغ ودبلجة الأنمي</p>
+                </div>
+            </div>
+
+            <!-- محرك البحث والمطابقة -->
+            <div class="hidden md:flex flex-1 max-w-md mx-8">
+                <div class="relative w-full">
+                    <input type="text" id="searchInput" placeholder="ابحث عن شخصية، نوع صوت، أو اسم عمل..." 
+                           class="w-full bg-studio-900 border border-studio-800 rounded-xl py-2 px-4 pr-10 text-sm focus:outline-none focus:border-indigo-500 transition placeholder-gray-500 text-gray-200">
+                    <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-3 text-gray-500 text-sm"></i>
+                </div>
+            </div>
+
+            <!-- أزرار الإجراءات السريعة -->
+            <div class="flex items-center gap-3">
+                <button class="bg-studio-900 hover:bg-studio-800 border border-studio-800 text-gray-300 text-sm px-3.5 py-2 rounded-xl flex items-center gap-2 transition">
+                    <i class="fa-solid fa-folder-open text-purple-400"></i>
+                    <span class="hidden sm:inline">أعمالي المسجلة</span>
+                </button>
+                <div class="w-10 h-10 rounded-xl bg-studio-800 border border-studio-700 flex items-center justify-center font-bold text-indigo-400 cursor-pointer hover:border-indigo-500 transition">
+                    م.ع
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. بطاقة ترحيبية / إحصائيات سريعة (Hero section) -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-studio-900 via-studio-800 to-indigo-950/40 border border-studio-800 p-6 md:p-10 shadow-2xl">
+            <div class="relative z-10 max-w-2xl">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-4">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    موسم تجارب الأداء المفتوح 2026
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold leading-tight text-white mb-3">
+                    أعِر صَوتك لشخصياتك المفضلة!
+                </h2>
+                <p class="text-gray-400 text-sm sm:text-base mb-6 leading-relaxed">
+                    منصة "نبرة" تربط فرق الدبلجة العربية المستقلة والمحترفة بالمدبلجين الموهوبين. استعرض الأدوار الشاغرة، اقرأ المشهد، وقدّم نبرتك بنقرة زر واحدة.
+                </p>
+                <div class="flex flex-wrap gap-4 text-xs sm:text-sm text-gray-300">
+                    <div class="flex items-center gap-2 bg-studio-950/60 px-3.5 py-2 rounded-xl border border-studio-800">
+                        <i class="fa-solid fa-film text-indigo-400"></i>
+                        <span>3 مشاريع نشطة</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-studio-950/60 px-3.5 py-2 rounded-xl border border-studio-800">
+                        <i class="fa-solid fa-users-viewfinder text-purple-400"></i>
+                        <span>6 شخصيات بحاجة لأصوات</span>
+                    </div>
+                </div>
+            </div>
+            <!-- تزيين خلفي -->
+            <div class="absolute -left-10 -bottom-10 opacity-10 text-9xl text-indigo-400 pointer-events-none">
+                <i class="fa-solid fa-waveform-lines"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. تصنيفات سريعة للأدوار -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 w-full flex items-center justify-between flex-wrap gap-4">
+        <div class="flex items-center gap-2 overflow-x-auto pb-2 w-full sm:w-auto">
+            <button onclick="filterRoles('all')" class="filter-btn active bg-indigo-600 text-white text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold transition shadow-md shadow-indigo-600/30">الكل</button>
+            <button onclick="filterRoles('بطل')" class="filter-btn bg-studio-900 hover:bg-studio-800 text-gray-400 text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold border border-studio-800 transition">أدوار رئيسية (أبطال)</button>
+            <button onclick="filterRoles('شرير')" class="filter-btn bg-studio-900 hover:bg-studio-800 text-gray-400 text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold border border-studio-800 transition">أدوار غامضة / أشرار</button>
+            <button onclick="filterRoles('كوميدي')" class="filter-btn bg-studio-900 hover:bg-studio-800 text-gray-400 text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold border border-studio-800 transition">أدوار مساندة / كوميدية</button>
+        </div>
+    </div>
+
+    <!-- 4. شبكة عرض المشاريع والشخصيات -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 flex-1 w-full">
+        <div id="rolesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- سيتم ملء البطاقات تلقائياً بواسطة JavaScript -->
+        </div>
+    </main>
+
+    <!-- 5. نافذة منبثقة لتقديم تجربة الأداء الصوتي (Audition Modal) -->
+    <div id="auditionModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-studio-900 border border-studio-700 w-full max-w-xl rounded-3xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <!-- زر إغلاق -->
+            <button onclick="closeAuditionModal()" class="absolute left-5 top-5 w-8 h-8 rounded-full bg-studio-800 text-gray-400 hover:text-white flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- عنوان النافذة -->
+            <div class="mb-5">
+                <span class="text-xs font-semibold px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">كاستينغ فوري</span>
+                <h3 id="modalCharacterName" class="text-2xl font-black text-white mt-1">اسم الشخصية</h3>
+                <p id="modalAnimeName" class="text-sm text-gray-400">اسم العمل والأنمي</p>
+            </div>
+
+            <!-- بطاقة السكربت المخصص للقراءة أثناء التسجيل -->
+            <div class="bg-studio-950 border border-studio-800 rounded-2xl p-4 mb-5">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold text-amber-400 flex items-center gap-1">
+                        <i class="fa-solid fa-scroll"></i> نص التجربة (المشهد المطلوب):
+                    </span>
+                    <span class="text-[11px] text-gray-500" id="modalVocalNote">طبقة الصوت</span>
+                </div>
+                <div class="p-3 bg-studio-900/60 rounded-xl border border-studio-800/80">
+                    <p id="modalScriptText" class="text-base text-gray-200 font-semibold leading-relaxed text-justify">
+                        <!-- نص السكربت -->
+                    </p>
+                </div>
+            </div>
+
+            <!-- قسم تسجيل الصوت التفاعلي أو الرفع -->
+            <div class="space-y-4">
+                <div class="border border-dashed border-studio-700 rounded-2xl p-5 text-center bg-studio-950/40">
+                    <div id="recordingStateDisplay" class="mb-3">
+                        <div id="micButton" onclick="toggleRecording()" class="w-16 h-16 rounded-full bg-studio-800 border-2 border-indigo-500 mx-auto flex items-center justify-center cursor-pointer hover:bg-studio-700 transition">
+                            <i id="micIcon" class="fa-solid fa-microphone text-2xl text-indigo-400"></i>
+                        </div>
+                        <p id="recordTimer" class="text-xs text-gray-400 mt-2">اضغط على المايك لبدء التسجيل الحي</p>
+                    </div>
+
+                    <!-- معاينة الصوت بعد التسجيل -->
+                    <div id="audioPlaybackContainer" class="hidden mt-3">
+                        <p class="text-xs text-emerald-400 mb-2 font-semibold">✓ تم تسجيل مقطعك بنجاح! استمع إليه:</p>
+                        <audio id="audioPreview" controls class="w-full h-10 rounded-lg outline-none"></audio>
+                    </div>
+
+                    <!-- أو اختيار ملف صوتي جاهز -->
+                    <div class="mt-4 pt-4 border-t border-studio-800 flex flex-col items-center">
+                        <label class="text-xs text-gray-400 cursor-pointer hover:text-indigo-400 flex items-center gap-2">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <span>أو قم برفع ملف صوتي جاهز (MP3 / WAV)</span>
+                            <input type="file" id="audioFileInput" accept="audio/*" class="hidden" onchange="handleFileUpload(event)">
+                        </label>
+                        <span id="fileName" class="text-xs text-purple-400 mt-1 hidden"></span>
+                    </div>
+                </div>
+
+                <!-- بيانات المدبلج الإضافية -->
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">اسمك المستعار أو اسم المدبلج:</label>
+                    <input type="text" id="actorName" placeholder="مثال: أحمد الصوتي" class="w-full bg-studio-950 border border-studio-800 rounded-xl py-2 px-3 text-sm text-gray-200 focus:outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">ملاحظة لفريق الإنتاج (اختياري):</label>
+                    <textarea id="actorNote" rows="2" placeholder="نوع المايكروفون المستخدم، خبرتك السابقة..." class="w-full bg-studio-950 border border-studio-800 rounded-xl py-2 px-3 text-sm text-gray-200 focus:outline-none focus:border-indigo-500"></textarea>
+                </div>
+            </div>
+
+            <!-- أزرار الإرسال والإلغاء -->
+            <div class="flex items-center gap-3 mt-6">
+                <button onclick="submitAudition()" class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-2.5 rounded-xl shadow-lg shadow-purple-600/30 transition text-sm">
+                    إرسال تجربة الأداء
+                </button>
+                <button onclick="closeAuditionModal()" class="px-5 py-2.5 bg-studio-800 hover:bg-studio-700 text-gray-300 rounded-xl transition text-sm">
+                    إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. إشعار النجاح (Toast Notification) -->
+    <div id="toast" class="fixed bottom-6 left-6 z-50 bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-xl"></i>
+        <div>
+            <h4 class="text-sm font-bold">تم إرسال التجربة بنجاح!</h4>
+            <p class="text-xs text-emerald-100">سيقوم مخرج العمل بمراجعة أدائك قريباً.</p>
+        </div>
+    </div>
+
+    <!-- JavaScript الخاص بالمنصة والميكروفون -->
+    <script>
+        // قاعدة بيانات وهمية للمشاريع والشخصيات المتاحة
+        const castingRoles = [
+            {
+                id: 1,
+                animeName: "أسطورة الظلال: الجزء الثاني",
+                studioTeam: "فريق سايان شينوبي للدبلجة",
+                characterName: "رينسوكي (Rensuke)",
+                type: "بطل",
+                gender: "ذكر - شاب",
+                vocalRequirement: "صوت حماسي، فيه خشونة خفيفة، نبرة قيادية وقت القتال",
+                scriptText: "«أخبرتُك سابقاً يا كايتو... لا يهمني كم من الوحوش ستخرج من تلك البوابة! طالما أن قلبي ينبض، لن أسمح لأي أحد بأن يدنس هذه الأرض مرة أخرى!»",
+                image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500&auto=format&fit=crop&q=60",
+                status: "مفتوح حتى 28 أكتوبر"
+            },
+            {
+                id: 2,
+                animeName: "أكاديمية السحر المحرم",
+                studioTeam: "شبكة الدبلجة العربية الحرة",
+                characterName: "البروفيسور ليڤي (Levi)",
+                type: "شرير",
+                gender: "ذكر - ناضج",
+                vocalRequirement: "صوت هادئ ومخيف، نبرة ساخرة وواثقة جداً",
+                scriptText: "«يا للمسكين... أكنت تظن حقاً أنك كنت تتحكم باختياراتك طوال هذه السنوات؟ كُنتَ مجرد بيدق على رقعة شطرنجي، والآن... حان وقت انتهاء اللعبة.»",
+                image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500&auto=format&fit=crop&q=60",
+                status: "باقي 3 أيام فقط"
+            },
+            {
+                id: 3,
+                animeName: "فجر الفضاء 2099",
+                studioTeam: "ستوديو أنيميديا",
+                characterName: "أميليا - الملازمة (Amelia)",
+                type: "بطل",
+                gender: "أنثى - شابة",
+                vocalRequirement: "صوت حازم، سريع البديهة، يظهر التوتر والمسؤولية",
+                scriptText: "«برج المراقبة أجبني! دروع السفينة انخفضت إلى 12 بالمئة! المحرك رقم 4 ينفجر... لن نستطيع الصمود لأكثر من دقيقتين، نريد الإذن بالهبوط الاضطراري!»",
+                image: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=500&auto=format&fit=crop&q=60",
+                status: "مفتوح للجميع"
+            },
+            {
+                id: 4,
+                animeName: "يوميات القط الساحر",
+                studioTeam: "فريق وميض الإبداع",
+                characterName: "السيد بومبو (Pombo)",
+                type: "كوميدي",
+                gender: "أي طبقة كوميدية",
+                vocalRequirement: "صوت سريع، مرح، متصنع الغباء وخفيف الظل",
+                scriptText: "«مياو! ماذا؟ أتريدني أن أنقذ العالم بمعدتي الفارغة هذه؟! أحضر لي أولاً تلك السمكة المشوية وسأفكر بالأمر، ربما بعد قيلولتي الظهرية!»",
+                image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&auto=format&fit=crop&q=60",
+                status: "مطلوب تجارب متنوعة"
+            },
+            {
+                id: 5,
+                animeName: "لحن الأعماق",
+                studioTeam: "فريق سايان شينوبي للدبلجة",
+                characterName: "العرافة نايا (Naya)",
+                type: "شرير",
+                gender: "أنثى - صوت عميق",
+                vocalRequirement: "صوت غامض ومركب، نبرة بطيئة وموزونة",
+                scriptText: "«الأمواج لا تكذب يا فتى... إنها تبكي أرواح الغرقى الذين ظنوا أنفسهم أبطالاً مثلك تماماً. لا تدع البحر يبتلع ما تبقى من روحك.»",
+                image: "https://images.unsplash.com/photo-1563089145-599997674d42?w=500&auto=format&fit=crop&q=60",
+                status: "مفتوح"
+            },
+            {
+                id: 6,
+                animeName: "صائدو الجوائز المتجولون",
+                studioTeam: "إنتاج مشترك مستقل",
+                characterName: "الميكانيكي دينق (Deng)",
+                type: "كوميدي",
+                gender: "ذكر - كهل / خشن",
+                vocalRequirement: "صوت مبحوح مع حشرجة، شخصية عصبية لكن طيبة",
+                scriptText: "«كم مرة قلتُ لك ألا تضغط على زر التربو أثناء الإقلاع؟! انظر إلى هذا الصمام لقد ذاب تماماً! هل تعتقد أن قطع الغيار تنمو على الأشجار؟!»",
+                image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=500&auto=format&fit=crop&q=60",
+                status: "مفتوح"
+            }
+        ];
+
+        // تهيئة وعرض بطاقات الأدوار
+        const grid = document.getElementById('rolesGrid');
+        
+        function renderRoles(roles) {
+            grid.innerHTML = '';
+            roles.forEach(role => {
+                const card = document.createElement('div');
+                card.className = "bg-studio-900 border border-studio-800 rounded-3xl overflow-hidden shadow-lg hover:border-indigo-500/50 hover:shadow-indigo-500/10 transition duration-300 flex flex-col justify-between group";
+                
+                card.innerHTML = `
+                    <div>
+                        <!-- صورة العمل مع بادج الحالة -->
+                        <div class="relative h-44 w-full overflow-hidden bg-studio-950">
+                            <img src="${role.image}" alt="${role.characterName}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80">
+                            <div class="absolute inset-0 bg-gradient-to-t from-studio-900 via-transparent to-transparent"></div>
+                            
+                            <span class="absolute top-3 right-3 text-[11px] font-bold px-2.5 py-1 rounded-full bg-studio-950/80 backdrop-blur-md text-purple-300 border border-purple-500/30">
+                                ${role.type}
+                            </span>
+
+                            <span class="absolute bottom-3 right-3 text-xs font-semibold px-2.5 py-0.5 rounded-lg bg-indigo-600/90 text-white">
+                                ${role.gender}
+                            </span>
+                        </div>
+
+                        <!-- تفاصيل الشخصية والمشروع -->
+                        <div class="p-5">
+                            <div class="text-[11px] text-gray-400 mb-1 flex items-center gap-1.5">
+                                <i class="fa-solid fa-clapperboard text-indigo-400"></i>
+                                <span>${role.animeName}</span>
+  
+</
