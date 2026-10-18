@@ -6,7 +6,7 @@
     <title>نبرة 🎙️ - منصة دبلجة وأداء أصوات الأنمي</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts (Cairo & Tajawal) -->
+    <!-- Google Fonts (Cairo) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -143,18 +143,18 @@
 
     <!-- 3. تصنيفات سريعة للأدوار -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 w-full flex items-center justify-between flex-wrap gap-4">
-        <div class="flex items-center gap-2 overflow-x-auto pb-2 w-full sm:w-auto">
-            <button onclick="filterRoles('all')" class="filter-btn active bg-indigo-600 text-white text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold transition shadow-md shadow-indigo-600/30">الكل</button>
-            <button onclick="filterRoles('بطل')" class="filter-btn bg-studio-900 hover:bg-studio-800 text-gray-400 text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold border border-studio-800 transition">أدوار رئيسية (أبطال)</button>
-            <button onclick="filterRoles('شرير')" class="filter-btn bg-studio-900 hover:bg-studio-800 text-gray-400 text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold border border-studio-800 transition">أدوار غامضة / أشرار</button>
-            <button onclick="filterRoles('كوميدي')" class="filter-btn bg-studio-900 hover:bg-studio-800 text-gray-400 text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold border border-studio-800 transition">أدوار مساندة / كوميدية</button>
+        <div class="flex items-center gap-2 overflow-x-auto pb-2 w-full sm:w-auto" id="filterContainer">
+            <button onclick="filterRoles('all', this)" class="filter-btn active bg-indigo-600 text-white text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold transition shadow-md shadow-indigo-600/30">الكل</button>
+            <button onclick="filterRoles('بطل', this)" class="filter-btn bg-studio-900 hover:bg-studio-800 text-gray-400 text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold border border-studio-800 transition">أدوار رئيسية (أبطال)</button>
+            <button onclick="filterRoles('شرير', this)" class="filter-btn bg-studio-900 hover:bg-studio-800 text-gray-400 text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold border border-studio-800 transition">أدوار غامضة / أشرار</button>
+            <button onclick="filterRoles('كوميدي', this)" class="filter-btn bg-studio-900 hover:bg-studio-800 text-gray-400 text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold border border-studio-800 transition">أدوار مساندة / كوميدية</button>
         </div>
     </div>
 
     <!-- 4. شبكة عرض المشاريع والشخصيات -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 flex-1 w-full">
         <div id="rolesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- سيتم ملء البطاقات تلقائياً بواسطة JavaScript -->
+            <!-- يتم تعبئة البطاقات تلقائياً بواسطة JavaScript -->
         </div>
     </main>
 
@@ -179,9 +179,9 @@
                     <span class="text-xs font-bold text-amber-400 flex items-center gap-1">
                         <i class="fa-solid fa-scroll"></i> نص التجربة (المشهد المطلوب):
                     </span>
-                    <span class="text-[11px] text-gray-500" id="modalVocalNote">طبقة الصوت</span>
+                    <span class="text-[11px] text-gray-400 bg-studio-900 px-2 py-0.5 rounded border border-studio-800" id="modalVocalNote">طبقة الصوت</span>
                 </div>
-                <div class="p-3 bg-studio-900/60 rounded-xl border border-studio-800/80">
+                <div class="p-3.5 bg-studio-900/60 rounded-xl border border-studio-800/80">
                     <p id="modalScriptText" class="text-base text-gray-200 font-semibold leading-relaxed text-justify">
                         <!-- نص السكربت -->
                     </p>
@@ -200,18 +200,20 @@
 
                     <!-- معاينة الصوت بعد التسجيل -->
                     <div id="audioPlaybackContainer" class="hidden mt-3">
-                        <p class="text-xs text-emerald-400 mb-2 font-semibold">✓ تم تسجيل مقطعك بنجاح! استمع إليه:</p>
+                        <p class="text-xs text-emerald-400 mb-2 font-semibold flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-circle-check"></i> تم تسجيل المقطع بنجاح! استمع إليه:
+                        </p>
                         <audio id="audioPreview" controls class="w-full h-10 rounded-lg outline-none"></audio>
                     </div>
 
                     <!-- أو اختيار ملف صوتي جاهز -->
                     <div class="mt-4 pt-4 border-t border-studio-800 flex flex-col items-center">
-                        <label class="text-xs text-gray-400 cursor-pointer hover:text-indigo-400 flex items-center gap-2">
+                        <label class="text-xs text-gray-400 cursor-pointer hover:text-indigo-400 flex items-center gap-2 transition">
                             <i class="fa-solid fa-cloud-arrow-up"></i>
                             <span>أو قم برفع ملف صوتي جاهز (MP3 / WAV)</span>
                             <input type="file" id="audioFileInput" accept="audio/*" class="hidden" onchange="handleFileUpload(event)">
                         </label>
-                        <span id="fileName" class="text-xs text-purple-400 mt-1 hidden"></span>
+                        <span id="fileName" class="text-xs text-purple-400 mt-1.5 font-medium hidden"></span>
                     </div>
                 </div>
 
@@ -247,9 +249,9 @@
         </div>
     </div>
 
-    <!-- JavaScript الخاص بالمنصة والميكروفون -->
+    <!-- JavaScript التفاعلي الكامل -->
     <script>
-        // قاعدة بيانات وهمية للمشاريع والشخصيات المتاحة
+        // قاعدة بيانات المشاريع والأدوار الشاغرة
         const castingRoles = [
             {
                 id: 1,
@@ -325,18 +327,32 @@
             }
         ];
 
-        // تهيئة وعرض بطاقات الأدوار
+        let currentCategory = 'all';
         const grid = document.getElementById('rolesGrid');
-        
+        const searchInput = document.getElementById('searchInput');
+
+        // 1. دالة رسم وعرض بطاقات الأدوار في الشبكة
         function renderRoles(roles) {
             grid.innerHTML = '';
+
+            if (roles.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-16 bg-studio-900/40 rounded-3xl border border-studio-800">
+                        <i class="fa-solid fa-microphone-slash text-4xl text-gray-600 mb-3"></i>
+                        <h3 class="text-lg font-bold text-gray-300">لم يتم العثور على أي أدوار تطابق بحثك</h3>
+                        <p class="text-xs text-gray-500 mt-1">جرّب البحث بكلمات أخرى أو اختر تصنيفاً مختلفاً</p>
+                    </div>
+                `;
+                return;
+            }
+
             roles.forEach(role => {
                 const card = document.createElement('div');
                 card.className = "bg-studio-900 border border-studio-800 rounded-3xl overflow-hidden shadow-lg hover:border-indigo-500/50 hover:shadow-indigo-500/10 transition duration-300 flex flex-col justify-between group";
                 
                 card.innerHTML = `
                     <div>
-                        <!-- صورة العمل مع بادج الحالة -->
+                        <!-- صورة العمل والبادجات -->
                         <div class="relative h-44 w-full overflow-hidden bg-studio-950">
                             <img src="${role.image}" alt="${role.characterName}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80">
                             <div class="absolute inset-0 bg-gradient-to-t from-studio-900 via-transparent to-transparent"></div>
@@ -348,12 +364,258 @@
                             <span class="absolute bottom-3 right-3 text-xs font-semibold px-2.5 py-0.5 rounded-lg bg-indigo-600/90 text-white">
                                 ${role.gender}
                             </span>
+                            <span class="absolute bottom-3 left-3 text-[10px] text-gray-300 bg-studio-950/70 px-2 py-0.5 rounded border border-studio-800 backdrop-blur-sm">
+                                ${role.status}
+                            </span>
                         </div>
 
                         <!-- تفاصيل الشخصية والمشروع -->
                         <div class="p-5">
-                            <div class="text-[11px] text-gray-400 mb-1 flex items-center gap-1.5">
-                                <i class="fa-solid fa-clapperboard text-indigo-400"></i>
-                                <span>${role.animeName}</span>
-  
-</
+                            <div class="text-[11px] text-gray-400 mb-1 flex items-center justify-between">
+                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-clapperboard text-indigo-400"></i> ${role.animeName}</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-1">${role.characterName}</h3>
+                            <p class="text-xs text-purple-400/80 mb-3 flex items-center gap-1">
+                                <i class="fa-solid fa-users text-[10px]"></i> ${role.studioTeam}
+                            </p>
+                            
+                            <div class="bg-studio-950/70 p-3 rounded-2xl border border-studio-800/80 mb-3 text-xs">
+                                <div class="text-indigo-400 font-semibold mb-1 flex items-center gap-1">
+                                    <i class="fa-solid fa-wave-square"></i> مواصفات النبرة:
+                                </div>
+                                <p class="text-gray-300 leading-relaxed text-[11px]">${role.vocalRequirement}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- زر فتح تجربة الأداء -->
+                    <div class="p-5 pt-0">
+                        <button onclick="openAuditionModal(${role.id})" class="w-full bg-studio-800 hover:bg-gradient-to-r hover:from-indigo-600 hover:to-purple-600 text-white text-xs sm:text-sm font-semibold py-2.5 rounded-xl border border-studio-700 hover:border-transparent transition duration-300 flex items-center justify-center gap-2 group-hover:border-indigo-500/40 shadow-sm">
+                            <i class="fa-solid fa-microphone text-indigo-400 group-hover:text-white transition"></i>
+                            <span>تقديم تجربة الأداء (كاستينغ)</span>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // 2. تطبيق البحث والفلترة المشتركة
+        function applyFilterAndSearch() {
+            const query = searchInput.value.trim().toLowerCase();
+            const filtered = castingRoles.filter(role => {
+                const matchesCategory = currentCategory === 'all' || role.type.toLowerCase().includes(currentCategory.toLowerCase());
+                const matchesQuery = !query || 
+                    role.characterName.toLowerCase().includes(query) ||
+                    role.animeName.toLowerCase().includes(query) ||
+                    role.vocalRequirement.toLowerCase().includes(query) ||
+                    role.studioTeam.toLowerCase().includes(query);
+
+                return matchesCategory && matchesQuery;
+            });
+
+            renderRoles(filtered);
+        }
+
+        // تبديل أزرار التصنيف
+        function filterRoles(category, btnElement) {
+            currentCategory = category;
+
+            // تحديث تصميم أزرار التبويب
+            document.querySelectorAll('#filterContainer .filter-btn').forEach(btn => {
+                btn.className = "filter-btn bg-studio-900 hover:bg-studio-800 text-gray-400 text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold border border-studio-800 transition";
+            });
+            if (btnElement) {
+                btnElement.className = "filter-btn active bg-indigo-600 text-white text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold transition shadow-md shadow-indigo-600/30";
+            }
+
+            applyFilterAndSearch();
+        }
+
+        // مراقبة حقل البحث الفوري
+        searchInput.addEventListener('input', applyFilterAndSearch);
+
+        // 3. إدارة النافذة المنبثقة (Audition Modal)
+        const modal = document.getElementById('auditionModal');
+        let selectedRoleId = null;
+
+        function openAuditionModal(roleId) {
+            const role = castingRoles.find(r => r.id === roleId);
+            if (!role) return;
+
+            selectedRoleId = roleId;
+            document.getElementById('modalCharacterName').innerText = role.characterName;
+            document.getElementById('modalAnimeName').innerText = `${role.animeName} • ${role.studioTeam}`;
+            document.getElementById('modalVocalNote').innerText = role.gender;
+            document.getElementById('modalScriptText').innerText = role.scriptText;
+
+            resetRecordingUI();
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+            }, 10);
+        }
+
+        function closeAuditionModal() {
+            if (isRecording) {
+                stopRecording();
+            }
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                resetRecordingUI();
+            }, 300);
+        }
+
+        // 4. آلية تسجيل الصوت الحي (MediaRecorder API)
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let isRecording = false;
+        let timerInterval = null;
+        let recordSeconds = 0;
+        let recordedAudioBlob = null;
+
+        const micButton = document.getElementById('micButton');
+        const micIcon = document.getElementById('micIcon');
+        const recordTimer = document.getElementById('recordTimer');
+        const audioPlaybackContainer = document.getElementById('audioPlaybackContainer');
+        const audioPreview = document.getElementById('audioPreview');
+
+        async function toggleRecording() {
+            if (!isRecording) {
+                startRecording();
+            } else {
+                stopRecording();
+            }
+        }
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        audioChunks.push(event.data);
+                    }
+                };
+
+                mediaRecorder.onstop = () => {
+                    recordedAudioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const audioUrl = URL.createObjectURL(recordedAudioBlob);
+                    audioPreview.src = audioUrl;
+                    audioPlaybackContainer.classList.remove('hidden');
+                    
+                    // إيقاف مسارات المايكروفون
+                    stream.getTracks().forEach(track => track.stop());
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+
+                // تحديث الواجهة لحالة التسجيل
+                micButton.classList.add('recording-pulse', 'border-red-500', 'bg-red-500/20');
+                micButton.classList.remove('border-indigo-500', 'bg-studio-800');
+                micIcon.className = "fa-solid fa-stop text-2xl text-red-500";
+                
+                recordSeconds = 0;
+                recordTimer.innerText = "جاري التسجيل: 00:00 (اضغط للإيقاف)";
+                recordTimer.classList.add('text-red-400');
+
+                timerInterval = setInterval(() => {
+                    recordSeconds++;
+                    const mins = String(Math.floor(recordSeconds / 60)).padStart(2, '0');
+                    const secs = String(recordSeconds % 60).padStart(2, '0');
+                    recordTimer.innerText = `جاري التسجيل: ${mins}:${secs} (اضغط للإيقاف)`;
+                }, 1000);
+
+            } catch (err) {
+                alert("تعذر الوصول إلى المايكروفون! يرجى السماح بالوصول للصوت من إعدادات المتصفح.");
+                console.error(err);
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== "inactive") {
+                mediaRecorder.stop();
+            }
+            clearInterval(timerInterval);
+            isRecording = false;
+
+            micButton.classList.remove('recording-pulse', 'border-red-500', 'bg-red-500/20');
+            micButton.classList.add('border-indigo-500', 'bg-studio-800');
+            micIcon.className = "fa-solid fa-microphone text-2xl text-indigo-400";
+            recordTimer.innerText = "تم التسجيل بنجاح! اضغط للبدء من جديد إذا أردت";
+            recordTimer.classList.remove('text-red-400');
+        }
+
+        // 5. رفع ملف صوتي جاهز
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                recordedAudioBlob = file;
+                const fileNameElem = document.getElementById('fileName');
+                fileNameElem.innerText = `الملف المحدد: ${file.name}`;
+                fileNameElem.classList.remove('hidden');
+
+                const audioUrl = URL.createObjectURL(file);
+                audioPreview.src = audioUrl;
+                audioPlaybackContainer.classList.remove('hidden');
+            }
+        }
+
+        // إعادة تهيئة حقول الصوت والمُدخلات
+        function resetRecordingUI() {
+            audioChunks = [];
+            recordedAudioBlob = null;
+            clearInterval(timerInterval);
+            isRecording = false;
+
+            micButton.className = "w-16 h-16 rounded-full bg-studio-800 border-2 border-indigo-500 mx-auto flex items-center justify-center cursor-pointer hover:bg-studio-700 transition";
+            micIcon.className = "fa-solid fa-microphone text-2xl text-indigo-400";
+            recordTimer.innerText = "اضغط على المايك لبدء التسجيل الحي";
+            recordTimer.className = "text-xs text-gray-400 mt-2";
+
+            audioPlaybackContainer.classList.add('hidden');
+            audioPreview.src = "";
+            document.getElementById('audioFileInput').value = "";
+            const fileName = document.getElementById('fileName');
+            fileName.innerText = "";
+            fileName.classList.add('hidden');
+
+            document.getElementById('actorName').value = "";
+            document.getElementById('actorNote').value = "";
+        }
+
+        // 6. تقديم تجربة الأداء وإظهار الإشعار (Toast)
+        function submitAudition() {
+            const actorName = document.getElementById('actorName').value.trim();
+            if (!actorName) {
+                alert("يرجى كتابة اسمك المستعار أو اسم المدبلج قبل الإرسال.");
+                return;
+            }
+
+            if (!recordedAudioBlob) {
+                alert("يرجى تسجيل مقطعك الصوتي أو رفع ملف صوتي قبل الإرسال.");
+                return;
+            }
+
+            // إغلاق النافذة
+            closeAuditionModal();
+
+            // إظهار التنبيه (Toast Notification)
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+            }, 3500);
+        }
+
+        // البدء بعرض جميع الأدوار عند تحميل الصفحة
+        renderRoles(castingRoles);
+    </script>
+</body>
+    </html>
