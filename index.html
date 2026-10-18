@@ -1,300 +1,578 @@
-<script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                fontFamily: {
-                    cairo: ['Cairo', 'sans-serif'],
-                },
-                colors: {
-                    studio: {
-                        950: '#07090e',
-                        900: '#0f131d',
-                        800: '#181f2f',
-                        700: '#232d42',
-                        accent: '#6366f1',
-                        neon: '#a855f7',
-                        mic: '#ef4444'
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نبرة 🎙️ - منصة كاستينغ ودبلجة الأنمي (فريق كينغ دوب)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Cairo) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    },
+                    colors: {
+                        studio: {
+                            950: '#07090e',
+                            900: '#0f131d',
+                            800: '#181f2f',
+                            700: '#232d42',
+                            accent: '#6366f1',
+                            neon: '#a855f7',
+                            mic: '#ef4444'
+                        }
                     }
                 }
             }
         }
-    }
-</script>
+    </script>
 
-<style>
-    body {
-        font-family: 'Cairo', sans-serif;
-        background-color: #07090e;
-        color: #f3f4f6;
-    }
-
-    /* تخصيص شريط التمرير */
-    ::-webkit-scrollbar {
-        width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-        background: #0f131d;
-    }
-    ::-webkit-scrollbar-thumb {
-        background: #232d42;
-        border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-        background: #6366f1;
-    }
-
-    /* نبض التسجيل الصوتي */
-    @keyframes pulse-ring {
-        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-        70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
-        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-    }
-    .recording-pulse {
-        animation: pulse-ring 1.8s infinite;
-    }
-</style>
-
-<!-- 1. شريط التنقل العلوي (Navbar) -->
-<header class="sticky top-0 z-40 backdrop-blur-md bg-studio-950/80 border-b border-studio-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        <!-- الشعار -->
-        <div class="flex items-center space-x-3 space-x-reverse">
-            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-600/30">
-                <i class="fa-solid fa-microphone-lines text-white text-xl"></i>
-            </div>
-            <div>
-                <h1 class="text-2xl font-black tracking-tight text-white flex items-center gap-2">
-                    نَبْـرَة <span class="text-xs bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 px-2 py-0.5 rounded-full">استوديو</span>
-                </h1>
-                <p class="text-xs text-gray-400">منصة كاستينغ ودبلجة الأنمي</p>
-            </div>
-        </div>
-
-        <!-- محرك البحث والمطابقة -->
-        <div class="hidden md:flex flex-1 max-w-md mx-8">
-            <div class="relative w-full">
-                <input type="text" id="searchInput" placeholder="ابحث عن شخصية، نوع صوت، أو اسم عمل..." 
-                       class="w-full bg-studio-900 border border-studio-800 rounded-xl py-2 px-4 pr-10 text-sm focus:outline-none focus:border-indigo-500 transition placeholder-gray-500 text-gray-200">
-                <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-3 text-gray-500 text-sm"></i>
-            </div>
-        </div>
-
-        <!-- أزرار الإجراءات السريعة -->
-        <div class="flex items-center gap-3">
-            <button class="bg-studio-900 hover:bg-studio-800 border border-studio-800 text-gray-300 text-sm px-3.5 py-2 rounded-xl flex items-center gap-2 transition">
-                <i class="fa-solid fa-folder-open text-purple-400"></i>
-                <span class="hidden sm:inline">أعمالي المسجلة</span>
-            </button>
-            <div class="w-10 h-10 rounded-xl bg-studio-800 border border-studio-700 flex items-center justify-center font-bold text-indigo-400 cursor-pointer hover:border-indigo-500 transition">
-                ك.د
-            </div>
-        </div>
-    </div>
-</header>
-
-<!-- 2. بطاقة ترحيبية / إحصائيات سريعة (Hero section) -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-studio-900 via-studio-800 to-indigo-950/40 border border-studio-800 p-6 md:p-10 shadow-2xl">
-        <div class="relative z-10 max-w-2xl">
-            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-4">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                موسم تجارب أداء فريق كينغ دوب 2026
-            </span>
-            <h2 class="text-3xl sm:text-4xl font-extrabold leading-tight text-white mb-3">
-                أعِر صَوتك لشخصيات جوجوتسو كايسن!
-            </h2>
-            <p class="text-gray-400 text-sm sm:text-base mb-6 leading-relaxed">
-                يفتح <strong class="text-indigo-400">فريق كينغ دوب</strong> باب تجارب الأداء الصوتي لأهم شخصيات أنمي Jujutsu Kaisen. اقرأ السكربت، استمع لتوجيهات النبرة، وسجّل صوتك مباشرة.
-            </p>
-            <div class="flex flex-wrap gap-4 text-xs sm:text-sm text-gray-300">
-                <div class="flex items-center gap-2 bg-studio-950/60 px-3.5 py-2 rounded-xl border border-studio-800">
-                    <i class="fa-solid fa-film text-indigo-400"></i>
-                    <span>مشروع Jujutsu Kaisen</span>
-                </div>
-                <div class="flex items-center gap-2 bg-studio-950/60 px-3.5 py-2 rounded-xl border border-studio-800">
-                    <i class="fa-solid fa-users-viewfinder text-purple-400"></i>
-                    <span>شخصيتان رئيسيتان متاحتان</span>
-                </div>
-            </div>
-        </div>
-        <!-- تزيين خلفي -->
-        <div class="absolute -left-10 -bottom-10 opacity-10 text-9xl text-indigo-400 pointer-events-none">
-            <i class="fa-solid fa-waveform-lines"></i>
-        </div>
-    </div>
-</section>
-
-<!-- 3. تصنيفات سريعة للأدوار -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 w-full flex items-center justify-between flex-wrap gap-4">
-    <div class="flex items-center gap-2 overflow-x-auto pb-2 w-full sm:w-auto" id="filterContainer">
-        <button onclick="filterRoles('all', this)" class="filter-btn active bg-indigo-600 text-white text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold transition shadow-md shadow-indigo-600/30">الكل</button>
-        <button onclick="filterRoles('بطل', this)" class="filter-btn bg-studio-900 hover:bg-studio-800 text-gray-400 text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold border border-studio-800 transition">أدوار رئيسية (أبطال)</button>
-        <button onclick="filterRoles('شرير', this)" class="filter-btn bg-studio-900 hover:bg-studio-800 text-gray-400 text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold border border-studio-800 transition">أدوار غامضة / أشرار</button>
-    </div>
-</div>
-
-<!-- 4. شبكة عرض المشاريع والشخصيات -->
-<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 flex-1 w-full">
-    <div id="rolesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-        <!-- يتم تعبئة البطاقات تلقائياً بواسطة JavaScript -->
-    </div>
-</main>
-
-<!-- 5. نافذة منبثقة لتقديم تجربة الأداء الصوتي (Audition Modal) -->
-<div id="auditionModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
-    <div class="bg-studio-900 border border-studio-700 w-full max-w-xl rounded-3xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-        <!-- زر إغلاق -->
-        <button onclick="closeAuditionModal()" class="absolute left-5 top-5 w-8 h-8 rounded-full bg-studio-800 text-gray-400 hover:text-white flex items-center justify-center transition">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-
-        <!-- عنوان النافذة -->
-        <div class="mb-5">
-            <span class="text-xs font-semibold px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">كاستينغ - كينغ دوب</span>
-            <h3 id="modalCharacterName" class="text-2xl font-black text-white mt-1">اسم الشخصية</h3>
-            <p id="modalAnimeName" class="text-sm text-gray-400">اسم العمل والأنمي</p>
-        </div>
-
-        <!-- بطاقة السكربت المخصص للقراءة أثناء التسجيل -->
-        <div class="bg-studio-950 border border-studio-800 rounded-2xl p-4 mb-5">
-            <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold text-amber-400 flex items-center gap-1">
-                    <i class="fa-solid fa-scroll"></i> نص التجربة (المشهد المطلوب):
-                </span>
-                <span class="text-[11px] text-gray-400 bg-studio-900 px-2 py-0.5 rounded border border-studio-800" id="modalVocalNote">طبقة الصوت</span>
-            </div>
-            <div class="p-3.5 bg-studio-900/60 rounded-xl border border-studio-800/80">
-                <p id="modalScriptText" class="text-base text-gray-200 font-semibold leading-relaxed text-justify">
-                    <!-- نص السكربت -->
-                </p>
-            </div>
-        </div>
-
-        <!-- قسم تسجيل الصوت التفاعلي أو الرفع -->
-        <div class="space-y-4">
-            <div class="border border-dashed border-studio-700 rounded-2xl p-5 text-center bg-studio-950/40">
-                <div id="recordingStateDisplay" class="mb-3">
-                    <div id="micButton" onclick="toggleRecording()" class="w-16 h-16 rounded-full bg-studio-800 border-2 border-indigo-500 mx-auto flex items-center justify-center cursor-pointer hover:bg-studio-700 transition">
-                        <i id="micIcon" class="fa-solid fa-microphone text-2xl text-indigo-400"></i>
-                    </div>
-                    <p id="recordTimer" class="text-xs text-gray-400 mt-2">اضغط على المايك لبدء التسجيل الحي</p>
-                </div>
-
-                <!-- معاينة الصوت بعد التسجيل -->
-                <div id="audioPlaybackContainer" class="hidden mt-3">
-                    <p class="text-xs text-emerald-400 mb-2 font-semibold flex items-center justify-center gap-1">
-                        <i class="fa-solid fa-circle-check"></i> تم تسجيل المقطع بنجاح! استمع إليه:
-                    </p>
-                    <audio id="audioPreview" controls class="w-full h-10 rounded-lg outline-none"></audio>
-                </div>
-
-                <!-- أو اختيار ملف صوتي جاهز -->
-                <div class="mt-4 pt-4 border-t border-studio-800 flex flex-col items-center">
-                    <label class="text-xs text-gray-400 cursor-pointer hover:text-indigo-400 flex items-center gap-2 transition">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <span>أو قم برفع ملف صوتي جاهز (MP3 / WAV)</span>
-                        <input type="file" id="audioFileInput" accept="audio/*" class="hidden" onchange="handleFileUpload(event)">
-                    </label>
-                    <span id="fileName" class="text-xs text-purple-400 mt-1.5 font-medium hidden"></span>
-                </div>
-            </div>
-
-            <!-- بيانات المدبلج الإضافية -->
-            <div>
-                <label class="block text-xs font-medium text-gray-300 mb-1">اسمك المستعار أو اسم المدبلج:</label>
-                <input type="text" id="actorName" placeholder="مثال: مؤدي صوت كينغ دوب" class="w-full bg-studio-950 border border-studio-800 rounded-xl py-2 px-3 text-sm text-gray-200 focus:outline-none focus:border-indigo-500">
-            </div>
-            <div>
-                <label class="block text-xs font-medium text-gray-300 mb-1">ملاحظة لإدارة فريق كينغ دوب (اختياري):</label>
-                <textarea id="actorNote" rows="2" placeholder="نوع المايكروفون، خبرتك السابقة في الدبلجة..." class="w-full bg-studio-950 border border-studio-800 rounded-xl py-2 px-3 text-sm text-gray-200 focus:outline-none focus:border-indigo-500"></textarea>
-            </div>
-        </div>
-
-        <!-- أزرار الإرسال والإلغاء -->
-        <div class="flex items-center gap-3 mt-6">
-            <button onclick="submitAudition()" class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-2.5 rounded-xl shadow-lg shadow-purple-600/30 transition text-sm">
-                إرسال تجربة الأداء إلى كينغ دوب
-            </button>
-            <button onclick="closeAuditionModal()" class="px-5 py-2.5 bg-studio-800 hover:bg-studio-700 text-gray-300 rounded-xl transition text-sm">
-                إلغاء
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- 6. إشعار النجاح (Toast Notification) -->
-<div id="toast" class="fixed bottom-6 left-6 z-50 bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
-    <i class="fa-solid fa-circle-check text-xl"></i>
-    <div>
-        <h4 class="text-sm font-bold">تم إرسال التجربة بنجاح!</h4>
-        <p class="text-xs text-emerald-100">سيقوم مخرج "فريق كينغ دوب" بمراجعة أدائك والرد قريباً.</p>
-    </div>
-</div>
-
-<!-- JavaScript التفاعلي الكامل -->
-<script>
-    // قاعدة بيانات المشاريع والأدوار الشاغرة (خاصة بفريق كينغ دوب)
-    const castingRoles = [
-        {
-            id: 1,
-            animeName: "Jujutsu Kaisen (جوجوتسو كايسن)",
-            studioTeam: "فريق كينغ دوب (King Dub)",
-            characterName: "يوجي إيتادوري (Yuji Itadori)",
-            type: "بطل",
-            gender: "ذكر - شاب مراهق",
-            vocalRequirement: "نبرة عفوية، دافئة ومليئة بالحيوية في المواقف العادية، وتتحول لنبرة قتالية حازمة وصارخة مفعمة بالعزيمة عند الاشتباك.",
-            scriptText: "«لا أعلم ما الذي سيحدث بعد موتي، لكنني لا أريد أن أندم على الطريقة التي عشت بها! لن أدع أي أحد يموت إن كان بإمكاني إنقاذه... حتى لو كان الثمن حياتي، سأسحقك هنا والآن!»",
-            image: "https://images.alphacoders.com/112/1126210.jpg",
-            status: "مفتوح لتجارب الأداء"
-        },
-        {
-            id: 2,
-            animeName: "Jujutsu Kaisen (جوجوتسو كايسن)",
-            studioTeam: "فريق كينغ دوب (King Dub)",
-            characterName: "سوغورو غيتو (Suguru Geto)",
-            type: "شرير",
-            gender: "ذكر - ناضج / وقور",
-            vocalRequirement: "صوت هادئ ورخيم، نبرة باردة وواثقة مع ابتسامة ساخرة خفية ونبرة متعالية ومقنعة تخفي خلفها قناعات مظلمة.",
-            scriptText: "«يا لهم من كائنات مثيرة للشفقة... غير السحرة مجرد قردة لا يجيدون سوى إفراز اللعنات وتلويث هذا العالم. ألا ترى كم هي جميلة تلك الرؤية؟ عالمٌ نقي لا يسكنه سوى النخبة من مستعملي الجوجوتسو.»",
-            image: "https://images.alphacoders.com/132/1325143.jpeg",
-            status: "مفتوح لتجارب الأداء"
-        }
-    ];
-
-    let currentCategory = 'all';
-    const grid = document.getElementById('rolesGrid');
-    const searchInput = document.getElementById('searchInput');
-
-    // 1. دالة رسم وعرض بطاقات الأدوار في الشبكة
-    function renderRoles(roles) {
-        grid.innerHTML = '';
-
-        if (roles.length === 0) {
-            grid.innerHTML = `
-                <div class="col-span-full text-center py-16 bg-studio-900/40 rounded-3xl border border-studio-800">
-                    <i class="fa-solid fa-microphone-slash text-4xl text-gray-600 mb-3"></i>
-                    <h3 class="text-lg font-bold text-gray-300">لم يتم العثور على أي دور يطابق بحثك</h3>
-                    <p class="text-xs text-gray-500 mt-1">جرّب البحث باسم الشخصية أو نوع الدور</p>
-                </div>
-            `;
-            return;
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #07090e;
+            color: #f3f4f6;
         }
 
-        roles.forEach(role => {
-            const card = document.createElement('div');
-            card.className = "bg-studio-900 border border-studio-800 rounded-3xl overflow-hidden shadow-lg hover:border-indigo-500/50 hover:shadow-indigo-500/10 transition duration-300 flex flex-col justify-between group";
-            
-            card.innerHTML = `
+        /* تخصيص شريط التمرير */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f131d;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #232d42;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6366f1;
+        }
+
+        /* نبض التسجيل الصوتي */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .recording-pulse {
+            animation: pulse-ring 1.8s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-purple-600 selection:text-white">
+
+    <!-- 1. شريط التنقل العلوي (Navbar) -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-studio-950/80 border-b border-studio-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- الشعار -->
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-600/30">
+                    <i class="fa-solid fa-microphone-lines text-white text-xl"></i>
+                </div>
                 <div>
-                    <!-- صورة الشخصية والبادجات -->
-                    <div class="relative h-60 w-full overflow-hidden bg-studio-950">
-                        <img src="${role.image}" alt="${role.characterName}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500 opacity-90">
-                        <div class="absolute inset-0 bg-gradient-to-t from-studio-900 via-transparent to-transparent"></div>
-                        
-                        <span class="absolute top-3 right-3 text-xs font-bold px-3 py-1 rounded-full bg-studio-950/80 backdrop-blur-md text-purple-300 border border-purple-500/30">
-                            ${role.type}
-                        </span>
+                    <h1 class="text-2xl font-black tracking-tight text-white flex items-center gap-2">
+                        نَبْـرَة <span class="text-xs bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 px-2 py-0.5 rounded-full">استوديو</span>
+                    </h1>
+                    <p class="text-xs text-gray-400">منصة كاستينغ ودبلجة الأنمي</p>
+                </div>
+            </div>
 
-                        <span class="absolute bottom-3 right-3 text-xs font-semibold px-2.5 py-1 rounded-lg bg-indigo-600/90 text-white shadow">
-                            ${role.gender}
-    </span>
+            <!-- محرك البحث والمطابقة -->
+            <div class="hidden md:flex flex-1 max-w-md mx-8">
+                <div class="relative w-full">
+                    <input type="text" id="searchInput" placeholder="ابحث عن شخصية، نوع صوت، أو اسم عمل..." 
+                           class="w-full bg-studio-900 border border-studio-800 rounded-xl py-2 px-4 pr-10 text-sm focus:outline-none focus:border-indigo-500 transition placeholder-gray-500 text-gray-200">
+                    <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-3 text-gray-500 text-sm"></i>
+                </div>
+            </div>
+
+            <!-- أزرار الإجراءات السريعة -->
+            <div class="flex items-center gap-3">
+                <button class="bg-studio-900 hover:bg-studio-800 border border-studio-800 text-gray-300 text-sm px-3.5 py-2 rounded-xl flex items-center gap-2 transition">
+                    <i class="fa-solid fa-folder-open text-purple-400"></i>
+                    <span class="hidden sm:inline">أعمالي المسجلة</span>
+                </button>
+                <div class="w-10 h-10 rounded-xl bg-studio-800 border border-studio-700 flex items-center justify-center font-bold text-indigo-400 cursor-pointer hover:border-indigo-500 transition">
+                    ك.د
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. بطاقة ترحيبية / إحصائيات سريعة (Hero section) -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-studio-900 via-studio-800 to-indigo-950/40 border border-studio-800 p-6 md:p-10 shadow-2xl">
+            <div class="relative z-10 max-w-2xl">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-4">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    موسم تجارب أداء فريق كينغ دوب 2026
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold leading-tight text-white mb-3">
+                    أعِر صَوتك لشخصيات جوجوتسو كايسن!
+                </h2>
+                <p class="text-gray-400 text-sm sm:text-base mb-6 leading-relaxed">
+                    يفتح <strong class="text-indigo-400">فريق كينغ دوب</strong> باب تجارب الأداء الصوتي لأهم شخصيات أنمي Jujutsu Kaisen. اقرأ السكربت، استمع لتوجيهات النبرة، وسجّل صوتك مباشرة.
+                </p>
+                <div class="flex flex-wrap gap-4 text-xs sm:text-sm text-gray-300">
+                    <div class="flex items-center gap-2 bg-studio-950/60 px-3.5 py-2 rounded-xl border border-studio-800">
+                        <i class="fa-solid fa-film text-indigo-400"></i>
+                        <span>مشروع Jujutsu Kaisen</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-studio-950/60 px-3.5 py-2 rounded-xl border border-studio-800">
+                        <i class="fa-solid fa-users-viewfinder text-purple-400"></i>
+                        <span>شخصيتان رئيسيتان متاحتان</span>
+                    </div>
+                </div>
+            </div>
+            <!-- تزيين خلفي -->
+            <div class="absolute -left-10 -bottom-10 opacity-10 text-9xl text-indigo-400 pointer-events-none">
+                <i class="fa-solid fa-waveform-lines"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. تصنيفات سريعة للأدوار -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 w-full flex items-center justify-between flex-wrap gap-4">
+        <div class="flex items-center gap-2 overflow-x-auto pb-2 w-full sm:w-auto" id="filterContainer">
+            <button onclick="filterRoles('all', this)" class="filter-btn active bg-indigo-600 text-white text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold transition shadow-md shadow-indigo-600/30">الكل</button>
+            <button onclick="filterRoles('بطل', this)" class="filter-btn bg-studio-900 hover:bg-studio-800 text-gray-400 text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold border border-studio-800 transition">أدوار رئيسية (أبطال)</button>
+            <button onclick="filterRoles('شرير', this)" class="filter-btn bg-studio-900 hover:bg-studio-800 text-gray-400 text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold border border-studio-800 transition">أدوار غامضة / أشرار</button>
+        </div>
+    </div>
+
+    <!-- 4. شبكة عرض المشاريع والشخصيات -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 flex-1 w-full">
+        <div id="rolesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+            <!-- يتم تعبئة البطاقات تلقائياً بواسطة JavaScript -->
+        </div>
+    </main>
+
+    <!-- 5. نافذة منبثقة لتقديم تجربة الأداء الصوتي (Audition Modal) -->
+    <div id="auditionModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-studio-900 border border-studio-700 w-full max-w-xl rounded-3xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <!-- زر إغلاق -->
+            <button onclick="closeAuditionModal()" class="absolute left-5 top-5 w-8 h-8 rounded-full bg-studio-800 text-gray-400 hover:text-white flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- عنوان النافذة -->
+            <div class="mb-5">
+                <span class="text-xs font-semibold px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">كاستينغ - كينغ دوب</span>
+                <h3 id="modalCharacterName" class="text-2xl font-black text-white mt-1">اسم الشخصية</h3>
+                <p id="modalAnimeName" class="text-sm text-gray-400">اسم العمل والأنمي</p>
+            </div>
+
+            <!-- بطاقة السكربت المخصص للقراءة أثناء التسجيل -->
+            <div class="bg-studio-950 border border-studio-800 rounded-2xl p-4 mb-5">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold text-amber-400 flex items-center gap-1">
+                        <i class="fa-solid fa-scroll"></i> نص التجربة (المشهد المطلوب):
+                    </span>
+                    <span class="text-[11px] text-gray-400 bg-studio-900 px-2 py-0.5 rounded border border-studio-800" id="modalVocalNote">طبقة الصوت</span>
+                </div>
+                <div class="p-3.5 bg-studio-900/60 rounded-xl border border-studio-800/80">
+                    <p id="modalScriptText" class="text-base text-gray-200 font-semibold leading-relaxed text-justify">
+                        <!-- نص السكربت -->
+                    </p>
+                </div>
+            </div>
+
+            <!-- قسم تسجيل الصوت التفاعلي أو الرفع -->
+            <div class="space-y-4">
+                <div class="border border-dashed border-studio-700 rounded-2xl p-5 text-center bg-studio-950/40">
+                    <div id="recordingStateDisplay" class="mb-3">
+                        <div id="micButton" onclick="toggleRecording()" class="w-16 h-16 rounded-full bg-studio-800 border-2 border-indigo-500 mx-auto flex items-center justify-center cursor-pointer hover:bg-studio-700 transition">
+                            <i id="micIcon" class="fa-solid fa-microphone text-2xl text-indigo-400"></i>
+                        </div>
+                        <p id="recordTimer" class="text-xs text-gray-400 mt-2">اضغط على المايك لبدء التسجيل الحي</p>
+                    </div>
+
+                    <!-- معاينة الصوت بعد التسجيل -->
+                    <div id="audioPlaybackContainer" class="hidden mt-3">
+                        <p class="text-xs text-emerald-400 mb-2 font-semibold flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-circle-check"></i> تم تسجيل المقطع بنجاح! استمع إليه:
+                        </p>
+                        <audio id="audioPreview" controls class="w-full h-10 rounded-lg outline-none"></audio>
+                    </div>
+
+                    <!-- أو اختيار ملف صوتي جاهز -->
+                    <div class="mt-4 pt-4 border-t border-studio-800 flex flex-col items-center">
+                        <label class="text-xs text-gray-400 cursor-pointer hover:text-indigo-400 flex items-center gap-2 transition">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <span>أو قم برفع ملف صوتي جاهز (MP3 / WAV)</span>
+                            <input type="file" id="audioFileInput" accept="audio/*" class="hidden" onchange="handleFileUpload(event)">
+                        </label>
+                        <span id="fileName" class="text-xs text-purple-400 mt-1.5 font-medium hidden"></span>
+                    </div>
+                </div>
+
+                <!-- بيانات المدبلج الإضافية -->
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">اسمك المستعار أو اسم المدبلج:</label>
+                    <input type="text" id="actorName" placeholder="مثال: مؤدي صوت كينغ دوب" class="w-full bg-studio-950 border border-studio-800 rounded-xl py-2 px-3 text-sm text-gray-200 focus:outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">ملاحظة لإدارة فريق كينغ دوب (اختياري):</label>
+                    <textarea id="actorNote" rows="2" placeholder="نوع المايكروفون، خبرتك السابقة في الدبلجة..." class="w-full bg-studio-950 border border-studio-800 rounded-xl py-2 px-3 text-sm text-gray-200 focus:outline-none focus:border-indigo-500"></textarea>
+                </div>
+            </div>
+
+            <!-- أزرار الإرسال والإلغاء -->
+            <div class="flex items-center gap-3 mt-6">
+                <button onclick="submitAudition()" class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-2.5 rounded-xl shadow-lg shadow-purple-600/30 transition text-sm">
+                    إرسال تجربة الأداء إلى كينغ دوب
+                </button>
+                <button onclick="closeAuditionModal()" class="px-5 py-2.5 bg-studio-800 hover:bg-studio-700 text-gray-300 rounded-xl transition text-sm">
+                    إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. إشعار النجاح (Toast Notification) -->
+    <div id="toast" class="fixed bottom-6 left-6 z-50 bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-xl"></i>
+        <div>
+            <h4 class="text-sm font-bold">تم إرسال التجربة بنجاح!</h4>
+            <p class="text-xs text-emerald-100">سيقوم مخرج "فريق كينغ دوب" بمراجعة أدائك والرد قريباً.</p>
+        </div>
+    </div>
+
+    <!-- JavaScript التفاعلي الكامل -->
+    <script>
+        // قاعدة بيانات المشاريع والأدوار الشاغرة (خاصة بفريق كينغ دوب)
+        const castingRoles = [
+            {
+                id: 1,
+                animeName: "Jujutsu Kaisen (جوجوتسو كايسن)",
+                studioTeam: "فريق كينغ دوب (King Dub)",
+                characterName: "يوجي إيتادوري (Yuji Itadori)",
+                type: "بطل",
+                gender: "ذكر - شاب مراهق",
+                vocalRequirement: "نبرة عفوية، دافئة ومليئة بالحيوية في المواقف العادية، وتتحول لنبرة قتالية حازمة وصارخة مفعمة بالعزيمة عند الاشتباك.",
+                scriptText: "«لا أعلم ما الذي سيحدث بعد موتي، لكنني لا أريد أن أندم على الطريقة التي عشت بها! لن أدع أي أحد يموت إن كان بإمكاني إنقاذه... حتى لو كان الثمن حياتي، سأسحقك هنا والآن!»",
+                image: "https://images.alphacoders.com/112/1126210.jpg",
+                status: "مفتوح لتجارب الأداء"
+            },
+            {
+                id: 2,
+                animeName: "Jujutsu Kaisen (جوجوتسو كايسن)",
+                studioTeam: "فريق كينغ دوب (King Dub)",
+                characterName: "سوغورو غيتو (Suguru Geto)",
+                type: "شرير",
+                gender: "ذكر - ناضج / وقور",
+                vocalRequirement: "صوت هادئ ورخيم، نبرة باردة وواثقة مع ابتسامة ساخرة خفية ونبرة متعالية ومقنعة تخفي خلفها قناعات مظلمة.",
+                scriptText: "«يا لهم من كائنات مثيرة للشفقة... غير السحرة مجرد قردة لا يجيدون سوى إفراز اللعنات وتلويث هذا العالم. ألا ترى كم هي جميلة تلك الرؤية؟ عالمٌ نقي لا يسكنه سوى النخبة من مستعملي الجوجوتسو.»",
+                image: "https://images.alphacoders.com/132/1325143.jpeg",
+                status: "مفتوح لتجارب الأداء"
+            }
+        ];
+
+        let currentCategory = 'all';
+        const grid = document.getElementById('rolesGrid');
+        const searchInput = document.getElementById('searchInput');
+
+        // 1. دالة رسم وعرض بطاقات الأدوار في الشبكة
+        function renderRoles(roles) {
+            grid.innerHTML = '';
+
+            if (roles.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-16 bg-studio-900/40 rounded-3xl border border-studio-800">
+                        <i class="fa-solid fa-microphone-slash text-4xl text-gray-600 mb-3"></i>
+                        <h3 class="text-lg font-bold text-gray-300">لم يتم العثور على أي دور يطابق بحثك</h3>
+                        <p class="text-xs text-gray-500 mt-1">جرّب البحث باسم الشخصية أو نوع الدور</p>
+                    </div>
+                `;
+                return;
+            }
+
+            roles.forEach(role => {
+                const card = document.createElement('div');
+                card.className = "bg-studio-900 border border-studio-800 rounded-3xl overflow-hidden shadow-lg hover:border-indigo-500/50 hover:shadow-indigo-500/10 transition duration-300 flex flex-col justify-between group";
+                
+                card.innerHTML = `
+                    <div>
+                        <!-- صورة الشخصية والبادجات -->
+                        <div class="relative h-60 w-full overflow-hidden bg-studio-950">
+                            <img referrerpolicy="no-referrer" src="${role.image}" alt="${role.characterName}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500 opacity-90">
+                            <div class="absolute inset-0 bg-gradient-to-t from-studio-900 via-transparent to-transparent"></div>
+                            
+                            <span class="absolute top-3 right-3 text-xs font-bold px-3 py-1 rounded-full bg-studio-950/80 backdrop-blur-md text-purple-300 border border-purple-500/30">
+                                ${role.type}
+                            </span>
+
+                            <span class="absolute bottom-3 right-3 text-xs font-semibold px-2.5 py-1 rounded-lg bg-indigo-600/90 text-white shadow">
+                                ${role.gender}
+                            </span>
+                            <span class="absolute bottom-3 left-3 text-[10px] text-gray-300 bg-studio-950/80 px-2.5 py-1 rounded-md border border-studio-800 backdrop-blur-sm">
+                                ${role.status}
+                            </span>
+                        </div>
+
+                        <!-- تفاصيل الشخصية والمشروع -->
+                        <div class="p-5">
+                            <div class="text-xs text-purple-400 font-semibold mb-1 flex items-center justify-between">
+                                <span>${role.animeName}</span>
+                            </div>
+                            <h3 class="text-xl font-black text-white mb-2">${role.characterName}</h3>
+                            <p class="text-xs text-indigo-300 mb-3 flex items-center gap-1 font-semibold">
+                                <i class="fa-solid fa-users text-xs"></i> ${role.studioTeam}
+                            </p>
+                            
+                            <div class="bg-studio-950/70 p-3.5 rounded-2xl border border-studio-800/80 mb-3 text-xs">
+                                <div class="text-indigo-400 font-semibold mb-1 flex items-center gap-1">
+                                    <i class="fa-solid fa-wave-square"></i> مواصفات النبرة المطلوبة:
+                                </div>
+                                <p class="text-gray-300 leading-relaxed">${role.vocalRequirement}</p>
+                            </div>
+
+                            <!-- السكربت المعروض في البطاقة -->
+                            <div class="bg-studio-950/40 p-3 rounded-xl border border-studio-800/60 mb-2">
+                                <span class="text-[11px] text-amber-400 font-bold block mb-1">
+                                    <i class="fa-solid fa-scroll"></i> نص السكربت التجريبي:
+                                </span>
+                                <p class="text-gray-300 text-xs italic leading-relaxed pr-2 border-r-2 border-purple-500">
+                                    ${role.scriptText}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- زر فتح تجربة الأداء -->
+                    <div class="p-5 pt-0">
+                        <button onclick="openAuditionModal(${role.id})" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white text-sm font-bold py-3 rounded-xl transition shadow-lg shadow-purple-600/20 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-microphone text-white"></i>
+                            <span>ابدأ تجربة الأداء (كاستينغ)</span>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // 2. تطبيق البحث والفلترة المشتركة
+        function applyFilterAndSearch() {
+            const query = searchInput.value.trim().toLowerCase();
+            const filtered = castingRoles.filter(role => {
+                const matchesCategory = currentCategory === 'all' || role.type.toLowerCase().includes(currentCategory.toLowerCase());
+                const matchesQuery = !query || 
+                    role.characterName.toLowerCase().includes(query) ||
+                    role.animeName.toLowerCase().includes(query) ||
+                    role.vocalRequirement.toLowerCase().includes(query) ||
+                    role.scriptText.toLowerCase().includes(query);
+
+                return matchesCategory && matchesQuery;
+            });
+
+            renderRoles(filtered);
+        }
+
+        // تبديل أزرار التصنيف
+        function filterRoles(category, btnElement) {
+            currentCategory = category;
+
+            document.querySelectorAll('#filterContainer .filter-btn').forEach(btn => {
+                btn.className = "filter-btn bg-studio-900 hover:bg-studio-800 text-gray-400 text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold border border-studio-800 transition";
+            });
+            if (btnElement) {
+                btnElement.className = "filter-btn active bg-indigo-600 text-white text-xs sm:text-sm px-4 py-2 rounded-xl font-semibold transition shadow-md shadow-indigo-600/30";
+            }
+
+            applyFilterAndSearch();
+        }
+
+        searchInput.addEventListener('input', applyFilterAndSearch);
+
+        // 3. إدارة النافذة المنبثقة (Audition Modal)
+        const modal = document.getElementById('auditionModal');
+        let selectedRoleId = null;
+
+        function openAuditionModal(roleId) {
+            const role = castingRoles.find(r => r.id === roleId);
+            if (!role) return;
+
+            selectedRoleId = roleId;
+            document.getElementById('modalCharacterName').innerText = role.characterName;
+            document.getElementById('modalAnimeName').innerText = `${role.animeName} • ${role.studioTeam}`;
+            document.getElementById('modalVocalNote').innerText = role.gender;
+            document.getElementById('modalScriptText').innerText = role.scriptText;
+
+            resetRecordingUI();
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+            }, 10);
+        }
+
+        function closeAuditionModal() {
+            if (isRecording) {
+                stopRecording();
+            }
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                resetRecordingUI();
+            }, 300);
+        }
+
+        // 4. آلية تسجيل الصوت الحي (MediaRecorder API)
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let isRecording = false;
+        let timerInterval = null;
+        let recordSeconds = 0;
+        let recordedAudioBlob = null;
+
+        const micButton = document.getElementById('micButton');
+        const micIcon = document.getElementById('micIcon');
+        const recordTimer = document.getElementById('recordTimer');
+        const audioPlaybackContainer = document.getElementById('audioPlaybackContainer');
+        const audioPreview = document.getElementById('audioPreview');
+
+        async function toggleRecording() {
+            if (!isRecording) {
+                startRecording();
+            } else {
+                stopRecording();
+            }
+        }
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        audioChunks.push(event.data);
+                    }
+                };
+
+                mediaRecorder.onstop = () => {
+                    recordedAudioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const audioUrl = URL.createObjectURL(recordedAudioBlob);
+                    audioPreview.src = audioUrl;
+                    audioPlaybackContainer.classList.remove('hidden');
+                    
+                    stream.getTracks().forEach(track => track.stop());
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+
+                micButton.classList.add('recording-pulse', 'border-red-500', 'bg-red-500/20');
+                micButton.classList.remove('border-indigo-500', 'bg-studio-800');
+                micIcon.className = "fa-solid fa-stop text-2xl text-red-500";
+                
+                recordSeconds = 0;
+                recordTimer.innerText = "جاري التسجيل: 00:00 (اضغط للإيقاف)";
+                recordTimer.classList.add('text-red-400');
+
+                timerInterval = setInterval(() => {
+                    recordSeconds++;
+                    const mins = String(Math.floor(recordSeconds / 60)).padStart(2, '0');
+                    const secs = String(recordSeconds % 60).padStart(2, '0');
+                    recordTimer.innerText = `جاري التسجيل: ${mins}:${secs} (اضغط للإيقاف)`;
+                }, 1000);
+
+            } catch (err) {
+                alert("تعذر الوصول إلى المايكروفون! يرجى السماح بالوصول للصوت من إعدادات المتصفح.");
+                console.error(err);
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== "inactive") {
+                mediaRecorder.stop();
+            }
+            clearInterval(timerInterval);
+            isRecording = false;
+
+            micButton.classList.remove('recording-pulse', 'border-red-500', 'bg-red-500/20');
+            micButton.classList.add('border-indigo-500', 'bg-studio-800');
+            micIcon.className = "fa-solid fa-microphone text-2xl text-indigo-400";
+            recordTimer.innerText = "تم التسجيل بنجاح! اضغط للبدء من جديد إذا أردت";
+            recordTimer.classList.remove('text-red-400');
+        }
+
+        // 5. رفع ملف صوتي جاهز
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if, (file) { // تم تصحيح الفاصلة هنا
+                // ...
+            }
+            if (file) {
+                recordedAudioBlob = file;
+                const fileNameElem = document.getElementById('fileName');
+                fileNameElem.innerText = `الملف المحدد: ${file.name}`;
+                fileNameElem.classList.remove('hidden');
+
+                const audioUrl = URL.createObjectURL(file);
+                audioPreview.src = audioUrl;
+                audioPlaybackContainer.classList.remove('hidden');
+            }
+        }
+
+        function resetRecordingUI() {
+            audioChunks = [];
+            recordedAudioBlob = null;
+            clearInterval(timerInterval);
+            isRecording = false;
+
+            micButton.className = "w-16 h-16 rounded-full bg-studio-800 border-2 border-indigo-500 mx-auto flex items-center justify-center cursor-pointer hover:bg-studio-700 transition";
+            micIcon.className = "fa-solid fa-microphone text-2xl text-indigo-400";
+            recordTimer.innerText = "اضغط على المايك لبدء التسجيل الحي";
+            recordTimer.className = "text-xs text-gray-400 mt-2";
+
+            audioPlaybackContainer.classList.add('hidden');
+            audioPreview.src = "";
+            document.getElementById('audioFileInput').value = "";
+            const fileName = document.getElementById('fileName');
+            fileName.innerText = "";
+            fileName.classList.add('hidden');
+
+            document.getElementById('actorName').value = "";
+            document.getElementById('actorNote').value = "";
+        }
+
+        // 6. تقديم تجربة الأداء
+        function submitAudition() {
+            const actorName = document.getElementById('actorName').value.trim();
+            if (!actorName) {
+                alert("يرجى كتابة اسمك المستعار أو اسم المدبلج قبل الإرسال.");
+                return;
+            }
+
+            if (!recordedAudioBlob) {
+                alert("يرجى تسجيل مقطعك الصوتي أو رفع ملف صوتي قبل الإرسال.");
+                return;
+            }
+
+            closeAuditionModal();
+
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+            }, 3500);
+        }
+
+        // البدء فوراً بعرض بطاقات إيتادوري وغيتو عند تحميل الصفحة
+        renderRoles(castingRoles);
+    </script>
+</body>
+</html>
