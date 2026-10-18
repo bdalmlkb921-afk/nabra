@@ -152,7 +152,7 @@
 
     <!-- 4. شبكة عرض المشاريع والشخصيات -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 flex-1 w-full">
-        <div id="rolesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+        <div id="rolesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <!-- يتم تعبئة البطاقات تلقائياً بواسطة JavaScript -->
         </div>
     </main>
@@ -250,7 +250,7 @@
 
     <!-- JavaScript التفاعلي الكامل -->
     <script>
-        // قاعدة بيانات المشاريع والأدوار الشاغرة (خاصة بفريق كينغ دوب)
+        // قاعدة بيانات الشخصيات لفريق كينغ دوب
         const castingRoles = [
             {
                 id: 1,
@@ -261,7 +261,8 @@
                 gender: "ذكر - شاب مراهق",
                 vocalRequirement: "نبرة عفوية، دافئة ومليئة بالحيوية في المواقف العادية، وتتحول لنبرة قتالية حازمة وصارخة مفعمة بالعزيمة عند الاشتباك.",
                 scriptText: "«لا أعلم ما الذي سيحدث بعد موتي، لكنني لا أريد أن أندم على الطريقة التي عشت بها! لن أدع أي أحد يموت إن كان بإمكاني إنقاذه... حتى لو كان الثمن حياتي، سأسحقك هنا والآن!»",
-                image: "https://images.alphacoders.com/112/1126210.jpg",
+                bgColor: "from-amber-600 to-red-700",
+                icon: "fa-fire-flame-curved",
                 status: "مفتوح لتجارب الأداء"
             },
             {
@@ -273,7 +274,8 @@
                 gender: "ذكر - ناضج / وقور",
                 vocalRequirement: "صوت هادئ ورخيم، نبرة باردة وواثقة مع ابتسامة ساخرة خفية ونبرة متعالية ومقنعة تخفي خلفها قناعات مظلمة.",
                 scriptText: "«يا لهم من كائنات مثيرة للشفقة... غير السحرة مجرد قردة لا يجيدون سوى إفراز اللعنات وتلويث هذا العالم. ألا ترى كم هي جميلة تلك الرؤية؟ عالمٌ نقي لا يسكنه سوى النخبة من مستعملي الجوجوتسو.»",
-                image: "https://images.alphacoders.com/132/1325143.jpeg",
+                bgColor: "from-purple-800 to-indigo-950",
+                icon: "fa-mask",
                 status: "مفتوح لتجارب الأداء"
             }
         ];
@@ -299,46 +301,50 @@
 
             roles.forEach(role => {
                 const card = document.createElement('div');
-                card.className = "bg-studio-900 border border-studio-800 rounded-3xl overflow-hidden shadow-lg hover:border-indigo-500/50 hover:shadow-indigo-500/10 transition duration-300 flex flex-col justify-between group";
+                card.className = "bg-studio-900 border border-studio-800 rounded-3xl overflow-hidden shadow-xl hover:border-indigo-500/50 hover:shadow-indigo-500/10 transition duration-300 flex flex-col justify-between group";
                 
                 card.innerHTML = `
                     <div>
-                        <!-- صورة الشخصية والبادجات -->
-                        <div class="relative h-60 w-full overflow-hidden bg-studio-950">
-                            <img referrerpolicy="no-referrer" src="${role.image}" alt="${role.characterName}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500 opacity-90">
-                            <div class="absolute inset-0 bg-gradient-to-t from-studio-900 via-transparent to-transparent"></div>
+                        <!-- رأس البطاقة بتصميم جمالي وأيقونة بارزة -->
+                        <div class="relative h-44 w-full bg-gradient-to-tr ${role.bgColor} flex items-center justify-center overflow-hidden">
+                            <div class="absolute inset-0 bg-black/20 backdrop-blur-[2px]"></div>
+                            <div class="relative z-10 text-center">
+                                <div class="w-16 h-16 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md mx-auto flex items-center justify-center mb-2 shadow-lg">
+                                    <i class="fa-solid ${role.icon} text-3xl text-white"></i>
+                                </div>
+                                <span class="text-xs text-white/90 font-bold tracking-wider uppercase bg-black/30 px-3 py-1 rounded-full border border-white/10">
+                                    ${role.characterName.split(' ')[0]}
+                                </span>
+                            </div>
                             
-                            <span class="absolute top-3 right-3 text-xs font-bold px-3 py-1 rounded-full bg-studio-950/80 backdrop-blur-md text-purple-300 border border-purple-500/30">
+                            <span class="absolute top-3 right-3 text-[11px] font-bold px-3 py-1 rounded-full bg-studio-950/80 backdrop-blur-md text-purple-300 border border-purple-500/30">
                                 ${role.type}
                             </span>
 
-                            <span class="absolute bottom-3 right-3 text-xs font-semibold px-2.5 py-1 rounded-lg bg-indigo-600/90 text-white shadow">
-                                ${role.gender}
-                            </span>
-                            <span class="absolute bottom-3 left-3 text-[10px] text-gray-300 bg-studio-950/80 px-2.5 py-1 rounded-md border border-studio-800 backdrop-blur-sm">
+                            <span class="absolute bottom-3 left-3 text-[10px] text-gray-200 bg-black/40 px-2.5 py-1 rounded-md border border-white/10 backdrop-blur-sm">
                                 ${role.status}
                             </span>
                         </div>
 
                         <!-- تفاصيل الشخصية والمشروع -->
-                        <div class="p-5">
+                        <div class="p-6">
                             <div class="text-xs text-purple-400 font-semibold mb-1 flex items-center justify-between">
                                 <span>${role.animeName}</span>
                             </div>
-                            <h3 class="text-xl font-black text-white mb-2">${role.characterName}</h3>
-                            <p class="text-xs text-indigo-300 mb-3 flex items-center gap-1 font-semibold">
+                            <h3 class="text-2xl font-black text-white mb-2">${role.characterName}</h3>
+                            <p class="text-xs text-indigo-300 mb-4 flex items-center gap-1.5 font-semibold">
                                 <i class="fa-solid fa-users text-xs"></i> ${role.studioTeam}
                             </p>
                             
                             <div class="bg-studio-950/70 p-3.5 rounded-2xl border border-studio-800/80 mb-3 text-xs">
-                                <div class="text-indigo-400 font-semibold mb-1 flex items-center gap-1">
+                                <div class="text-indigo-400 font-semibold mb-1.5 flex items-center gap-1">
                                     <i class="fa-solid fa-wave-square"></i> مواصفات النبرة المطلوبة:
                                 </div>
                                 <p class="text-gray-300 leading-relaxed">${role.vocalRequirement}</p>
                             </div>
 
                             <!-- السكربت المعروض في البطاقة -->
-                            <div class="bg-studio-950/40 p-3 rounded-xl border border-studio-800/60 mb-2">
+                            <div class="bg-studio-950/40 p-3.5 rounded-xl border border-studio-800/60 mb-2">
                                 <span class="text-[11px] text-amber-400 font-bold block mb-1">
                                     <i class="fa-solid fa-scroll"></i> نص السكربت التجريبي:
                                 </span>
@@ -350,8 +356,8 @@
                     </div>
 
                     <!-- زر فتح تجربة الأداء -->
-                    <div class="p-5 pt-0">
-                        <button onclick="openAuditionModal(${role.id})" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white text-sm font-bold py-3 rounded-xl transition shadow-lg shadow-purple-600/20 flex items-center justify-center gap-2">
+                    <div class="p-6 pt-0">
+                        <button onclick="openAuditionModal(${role.id})" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 text-white text-sm font-bold py-3.5 rounded-xl transition shadow-lg shadow-purple-600/20 flex items-center justify-center gap-2">
                             <i class="fa-solid fa-microphone text-white"></i>
                             <span>ابدأ تجربة الأداء (كاستينغ)</span>
                         </button>
@@ -511,9 +517,6 @@
         // 5. رفع ملف صوتي جاهز
         function handleFileUpload(event) {
             const file = event.target.files[0];
-            if, (file) { // تم تصحيح الفاصلة هنا
-                // ...
-            }
             if (file) {
                 recordedAudioBlob = file;
                 const fileNameElem = document.getElementById('fileName');
@@ -555,7 +558,7 @@
                 alert("يرجى كتابة اسمك المستعار أو اسم المدبلج قبل الإرسال.");
                 return;
             }
-ق
+
             if (!recordedAudioBlob) {
                 alert("يرجى تسجيل مقطعك الصوتي أو رفع ملف صوتي قبل الإرسال.");
                 return;
@@ -571,9 +574,8 @@
             }, 3500);
         }
 
-        // البدء فوراً بعرض بطاقات إيتادوري وغيتو عند تحميل الصفحة
+        // تشغيل عرض البطاقات فوراً عند تحميل الصفحة
         renderRoles(castingRoles);
     </script>
 </body>
 </html>
-
